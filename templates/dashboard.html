@@ -1,0 +1,312 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ schedule_name }} Dashboard - Event Schedule Savvy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .stats-gradient {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+        }
+        
+        .dashboard-header {
+            background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+        
+        .chart-container img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+        }
+        
+        .card-hover {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        @media (max-width: 640px) {
+            .chart-container {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <a href="#" id="home-link" class="text-xl font-bold text-indigo-600">
+                            EventScheduleSavvy
+                        </a>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="max-w-xs">
+                        <label for="schedule-select" class="sr-only">Schedule</label>
+                        <select id="schedule-select" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                            <option value="">Select a schedule</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Dashboard Header -->
+    <div class="dashboard-header text-white py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 class="text-3xl font-bold">{{ schedule_name }}</h1>
+            <p class="mt-1 text-lg opacity-90">Event Dashboard</p>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <!-- Total Events -->
+            <div class="bg-white overflow-hidden shadow rounded-lg card-hover">
+                <div class="px-4 py-5 sm:p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
+                            <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">
+                                    Total Events
+                                </dt>
+                                <dd>
+                                    <div id="total-events" class="text-lg font-bold text-gray-900">0</div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Average Duration -->
+            <div class="bg-white overflow-hidden shadow rounded-lg card-hover">
+                <div class="px-4 py-5 sm:p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
+                            <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">
+                                    Average Duration
+                                </dt>
+                                <dd>
+                                    <div id="avg-duration" class="text-lg font-bold text-gray-900">0 mins</div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Peak Hour -->
+            <div class="bg-white overflow-hidden shadow rounded-lg card-hover">
+                <div class="px-4 py-5 sm:p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 bg-purple-500 rounded-md p-3">
+                            <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">
+                                    Peak Start Hour
+                                </dt>
+                                <dd>
+                                    <div id="peak-hour" class="text-lg font-bold text-gray-900">N/A</div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Optimized Events -->
+            <div class="bg-white overflow-hidden shadow rounded-lg card-hover">
+                <div class="px-4 py-5 sm:p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
+                            <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">
+                                    Optimized Events
+                                </dt>
+                                <dd>
+                                    <div id="optimized-events" class="text-lg font-bold text-gray-900">0</div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column: Add Event Form + Event List -->
+            <div class="lg:col-span-1">
+                <div class="bg-white shadow rounded-lg mb-6">
+                    <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+                        <h3 class="text-lg font-medium text-gray-900">Add New Event</h3>
+                    </div>
+                    <div class="px-4 py-5 sm:p-6">
+                        <form id="event-form" class="space-y-4">
+                            <div>
+                                <label for="event-name" class="block text-sm font-medium text-gray-700">Event Name</label>
+                                <input type="text" name="event-name" id="event-name" placeholder="Conference Talk" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                            
+                            <div>
+                                <label for="event-start" class="block text-sm font-medium text-gray-700">Start Time</label>
+                                <input type="datetime-local" name="event-start" id="event-start" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                            
+                            <div>
+                                <label for="event-end" class="block text-sm font-medium text-gray-700">End Time</label>
+                                <input type="datetime-local" name="event-end" id="event-end" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                            
+                            <div>
+                                <button type="submit" class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    Add Event
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="bg-white shadow rounded-lg">
+                    <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+                        <h3 class="text-lg font-medium text-gray-900">All Events</h3>
+                    </div>
+                    <div class="px-4 py-5 sm:p-6">
+                        <div id="events-list" class="space-y-3 overflow-y-auto max-h-80">
+                            <p class="text-gray-500 text-center py-4">No events found</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Column: Charts + Optimized Schedule -->
+            <div class="lg:col-span-2">
+                <!-- Charts -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <!-- Duration Histogram -->
+                    <div class="bg-white shadow rounded-lg card-hover">
+                        <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+                            <h3 class="text-lg font-medium text-gray-900">Event Durations</h3>
+                        </div>
+                        <div class="px-4 py-5 sm:p-6 chart-container">
+                            <img id="duration-histogram" src="" alt="Duration Histogram" class="mx-auto">
+                        </div>
+                    </div>
+                    
+                    <!-- Start Time Bar Chart -->
+                    <div class="bg-white shadow rounded-lg card-hover">
+                        <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+                            <h3 class="text-lg font-medium text-gray-900">Events by Start Hour</h3>
+                        </div>
+                        <div class="px-4 py-5 sm:p-6 chart-container">
+                            <img id="start-time-barchart" src="" alt="Start Time Bar Chart" class="mx-auto">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Event Name Pie Chart -->
+                    <div class="bg-white shadow rounded-lg card-hover">
+                        <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+                            <h3 class="text-lg font-medium text-gray-900">Event Names</h3>
+                        </div>
+                        <div class="px-4 py-5 sm:p-6 chart-container">
+                            <img id="name-piechart" src="" alt="Event Name Pie Chart" class="mx-auto">
+                        </div>
+                    </div>
+                    
+                    <!-- Optimized Schedule -->
+                    <div class="md:col-span-2 bg-white shadow rounded-lg">
+                        <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+                            <h3 class="text-lg font-medium text-gray-900">Optimized Schedule (Non-overlapping)</h3>
+                        </div>
+                        <div class="px-4 py-5 sm:p-6">
+                            <div id="optimized-events" class="space-y-3 overflow-y-auto max-h-72">
+                                <p class="text-gray-500 text-center py-4">No optimized events available</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-white mt-12 border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="md:flex md:items-center md:justify-between">
+                <div class="flex space-x-6 md:order-2">
+                    <p class="text-gray-400 text-sm">
+                        Built with Flask, Tailwind CSS, and JavaScript
+                    </p>
+                </div>
+                <p class="mt-8 text-base text-gray-400 md:mt-0 md:order-1">
+                    &copy; 2025 EventScheduleSavvy. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-4 right-4 flex items-center p-4 mb-4 bg-blue-100 text-blue-800 rounded-lg shadow hidden" role="alert">
+        <div id="toast-icon" class="inline-flex flex-shrink-0 justify-center items-center w-8 h-8 text-blue-500 bg-blue-100 rounded-lg">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+            </svg>
+        </div>
+        <div id="toast-message" class="ml-3 text-sm font-normal">Information message</div>
+        <button id="toast-close-button" type="button" class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8" data-dismiss-target="#toast-default" aria-label="Close">
+            <span class="sr-only">Close</span>
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+            </svg>
+        </button>
+    </div>
+    
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

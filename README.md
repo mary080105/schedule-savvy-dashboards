@@ -1,73 +1,60 @@
-# Welcome to your Lovable project
 
-## Project info
+# Event Scheduling Analytics Application
 
-**URL**: https://lovable.dev/projects/f7476dc7-5a56-456e-9a6c-0f312a5befa4
+A clean, interactive event scheduling and analytics web application using Flask for the backend and Tailwind CSS + vanilla JavaScript for the frontend. The app supports multiple independent event schedules via route parameters.
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+- **Multiple Schedule Management:** Create and switch between different event schedules via route parameters
+- **Event Creation:** Add events with name, start time, and end time
+- **Greedy Scheduling Algorithm:** Automatically select non-overlapping events for optimal schedule
+- **Analytics Dashboard:** View key metrics for each schedule
+- **Data Visualizations:** View charts of event durations, start times, and name frequencies
+- **Responsive Design:** Optimized for both mobile and desktop views
 
-**Use Lovable**
+## Technical Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/f7476dc7-5a56-456e-9a6c-0f312a5befa4) and start prompting.
+- **Backend:** Flask (Python)
+- **Frontend:** Tailwind CSS + Vanilla JavaScript
+- **Visualizations:** Matplotlib (Python)
+- **Styling:** Responsive design with Tailwind CSS
 
-Changes made via Lovable will be committed automatically to this repo.
+## Installation
 
-**Use your preferred IDE**
+1. Clone the repository
+2. Install dependencies:
+   ```
+   pip install -r requirements.txt
+   ```
+3. Run the application:
+   ```
+   python app.py
+   ```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## Usage
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+1. Access the application at `http://127.0.0.1:5000`
+2. Create a new schedule or select an existing one
+3. Add events to your schedule
+4. View analytics and visualizations on the dashboard
 
-Follow these steps:
+## API Endpoints
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+- `GET /api/schedules` - Get all schedules
+- `GET /api/events/<schedule_name>` - Get all events for a schedule
+- `POST /api/events/<schedule_name>` - Add an event to a schedule
+- `GET /api/analytics/<schedule_name>` - Get analytics for a schedule
+- `GET /api/optimized/<schedule_name>` - Get optimized (non-overlapping) events
+- `GET /api/visualizations/<schedule_name>` - Get data visualizations for a schedule
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## Deployment
 
-# Step 3: Install the necessary dependencies.
-npm i
+The application can be deployed on any platform that supports Python applications:
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+1. Set up dependencies with `pip install -r requirements.txt`
+2. Use the provided Procfile for platforms like Heroku
+3. Configure environment variables as needed
 
-**Edit a file directly in GitHub**
+## License
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/f7476dc7-5a56-456e-9a6c-0f312a5befa4) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+MIT License
